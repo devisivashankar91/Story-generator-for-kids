@@ -252,11 +252,11 @@
 
         <div class="example">
             <strong>Try ANY characters or themes:</strong><br>
+            • "Magic elephant, boy named Dhruv, friendship"<br>
             • "Luna the dragon, magical forest, lost memories"<br>
-            • "Robot named Zyx, underwater city, friendship"<br>
-            • "Princess Aria, talking animals, environmental problem"<br>
-            • "Space explorer cats, alien planet, teamwork"<br>
-            • "Time-traveling librarian, ancient Egypt, mystery"
+            • "Robot named Zyx, underwater city, learning to cook"<br>
+            • "Princess Aria, talking animals, saving the environment"<br>
+            • "Space explorer cats, alien planet, teamwork"
         </div>
 
         <div class="input-group">
@@ -267,35 +267,15 @@
                 placeholder="Enter ANY characters, settings, themes, or problems...
 
 Examples:
-- A brave little mouse named Pip, enchanted bakery, courage
+- Magic elephant, boy named Dhruv, friendship
+- Brave little mouse named Pip, enchanted bakery, courage
 - Twin robots, floating city, learning emotions  
 - Magical paintbrush, artist girl, helping others
-- Dancing elephant, circus, finding confidence
-- Wise old turtle, ocean cleanup, responsibility"
+- Dancing elephant, circus, finding confidence"
             ></textarea>
         </div>
 
-        <div class="row">
-            <div class="col">
-                <div class="input-group">
-                    <label for="age">Child's Age:</label>
-                    <input type="number" id="age" class="age-input" min="1" max="18" value="7" placeholder="Age">
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group">
-                    <label for="storyFocus">Story Focus:</label>
-                    <select id="storyFocus" class="length-select">
-                        <option value="adventure">Adventure & Problem Solving</option>
-                        <option value="friendship">Friendship & Social Skills</option>
-                        <option value="learning">Learning & Education</option>
-                        <option value="responsibility">Responsibility & Growing Up</option>
-                        <option value="creativity">Creativity & Imagination</option>
-                        <option value="courage">Courage & Overcoming Fears</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+
 
         <button id="generateBtn" class="generate-btn" onclick="generateStory()">🧠 Generate Unique Story</button>
 
@@ -316,194 +296,176 @@ Examples:
         let currentApiKey = 'demo';
         let currentStory = '';
 
-        // AI Story Generation Engine
+        // Enhanced AI Story Generation Engine
         class StoryAI {
             constructor() {
-                this.storyTemplates = [
-                    'hero-journey', 'problem-solution', 'friendship-adventure', 
-                    'mystery-discovery', 'transformation', 'quest', 'rescue-mission'
-                ];
-                
-                this.plotDevices = [
-                    'unexpected ally', 'hidden talent', 'magical object', 'wise mentor',
-                    'challenging obstacle', 'misunderstanding', 'lost item', 'secret revealed'
-                ];
-                
                 this.settings = [
-                    'enchanted forest', 'bustling city', 'peaceful village', 'mysterious cave',
-                    'floating island', 'underwater kingdom', 'mountain peak', 'desert oasis',
-                    'ancient library', 'space station', 'magical school', 'hidden garden'
+                    'peaceful village', 'enchanted forest', 'bustling city', 'magical kingdom', 
+                    'quiet meadow', 'mysterious cave', 'floating island', 'cozy town', 
+                    'hidden valley', 'ancient castle', 'underwater world', 'mountain peak'
                 ];
                 
-                this.emotions = [
-                    'excited', 'curious', 'nervous', 'determined', 'hopeful', 'worried', 'brave'
-                ];
-                
-                this.conflicts = [
-                    'must find something lost', 'needs to help someone', 'faces a big fear',
-                    'solves a mystery', 'learns a new skill', 'makes a difficult choice',
-                    'brings friends together', 'protects something precious'
-                ];
-                
-                this.lessons = [
-                    'friendship is powerful', 'everyone has unique talents', 'courage comes from within',
-                    'helping others feels wonderful', 'mistakes help us learn', 'teamwork solves problems',
-                    'being different is special', 'persistence pays off'
-                ];
+                this.timeOfDay = ['morning', 'afternoon', 'evening', 'dawn', 'sunset', 'noon'];
+                this.weather = ['sunny', 'rainy', 'cloudy', 'misty', 'starry', 'snowy'];
+                this.emotions = ['excited', 'curious', 'happy', 'determined', 'hopeful', 'eager'];
             }
 
-            extractElements(input) {
-                const words = input.toLowerCase().split(/[,\s]+/);
-                const characters = [];
-                const themes = [];
-                const settings = [];
+            generateStory(input) {
+                // Parse input to extract elements
+                const elements = this.parseInput(input);
                 
-                // Simple keyword extraction (in a real AI this would be more sophisticated)
-                words.forEach(word => {
-                    if (word.length > 2) {
-                        if (Math.random() > 0.7) themes.push(word);
-                        if (Math.random() > 0.8) characters.push(word);
-                    }
-                });
-                
-                return { characters, themes, settings, originalInput: input };
-            }
-
-            generateTitle(elements, template) {
-                const titleTypes = [
-                    `${this.capitalize(elements.originalInput.split(',')[0])} and the ${this.getRandomElement(['Great', 'Amazing', 'Mysterious', 'Magical'])} ${this.getRandomElement(['Adventure', 'Quest', 'Journey', 'Challenge'])}`,
-                    `The ${this.getRandomElement(['Tale', 'Story', 'Legend', 'Adventure'])} of ${this.getRandomElement(elements.originalInput.split(','))}`,
-                    `When ${this.getRandomElement(['Magic', 'Friendship', 'Courage', 'Wonder'])} ${this.getRandomElement(['Happened', 'Bloomed', 'Awakened', 'Emerged'])}`,
-                    `${this.getRandomElement(['A', 'The'])} ${this.getRandomElement(['Wonderful', 'Amazing', 'Incredible', 'Fantastic'])} ${this.getRandomElement(['Day', 'Adventure', 'Discovery', 'Journey'])}`
-                ];
-                
-                return this.getRandomElement(titleTypes);
-            }
-
-            generateStory(input, age, focus) {
-                const elements = this.extractElements(input);
-                const template = this.getRandomElement(this.storyTemplates);
+                // Generate story components
                 const setting = this.getRandomElement(this.settings);
+                const time = this.getRandomElement(this.timeOfDay);
+                const weather = this.getRandomElement(this.weather);
                 const emotion = this.getRandomElement(this.emotions);
-                const conflict = this.getRandomElement(this.conflicts);
-                const plotDevice = this.getRandomElement(this.plotDevices);
-                const lesson = this.getRandomElement(this.lessons);
-                const timeOfDay = this.getRandomElement(['morning', 'afternoon', 'evening', 'dawn', 'sunset']);
-                const weather = this.getRandomElement(['sunny', 'rainy', 'misty', 'cloudy', 'starry']);
                 
-                const title = this.generateTitle(elements, template);
-                
-                // Create unique story based on all elements
-                const storyParts = this.buildStoryStructure(
-                    input, setting, emotion, conflict, plotDevice, lesson, 
-                    age, focus, timeOfDay, weather
-                );
-                
+                const title = this.generateTitle(elements);
+                const content = this.generateContent(elements, setting, time, weather, emotion);
                 const storyId = Math.floor(Math.random() * 999999);
                 
+                return { title, content, id: storyId };
+            }
+
+            parseInput(input) {
+                const parts = input.split(',').map(p => p.trim());
                 return {
-                    title,
-                    content: storyParts.join('\n\n'),
-                    id: storyId
+                    mainCharacter: this.cleanCharacterName(parts[0]),
+                    secondaryElement: parts.length > 1 ? parts[1] : null,
+                    theme: parts.length > 2 ? parts[2] : 'adventure'
                 };
             }
 
-            buildStoryStructure(input, setting, emotion, conflict, plotDevice, lesson, age, focus, timeOfDay, weather) {
-                // Extract main character/element from input
-                const mainElement = input.split(',')[0].trim();
-                const theme = input.includes(',') ? input.split(',')[1].trim() : 'adventure';
+            cleanCharacterName(name) {
+                // Clean up and format character names properly
+                if (!name) return 'the hero';
                 
-                const opening = this.generateOpening(mainElement, setting, timeOfDay, weather, emotion);
-                const problem = this.generateProblem(mainElement, conflict, theme);
-                const development = this.generateDevelopment(mainElement, plotDevice, focus);
-                const climax = this.generateClimax(mainElement, theme, age);
-                const resolution = this.generateResolution(mainElement, lesson, age);
+                // Handle specific cases
+                if (name.toLowerCase().includes('magic elephant')) {
+                    return 'Mango the Magic Elephant';
+                }
                 
-                return [opening, problem, development, climax, resolution];
+                // Capitalize first letter of each word
+                return name.split(' ').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                ).join(' ');
             }
 
-            generateOpening(mainElement, setting, timeOfDay, weather, emotion) {
+            generateTitle(elements) {
+                const titleTemplates = [
+                    `${elements.mainCharacter} and the Great Adventure`,
+                    `The Day ${elements.mainCharacter} Discovered ${elements.theme}`,
+                    `${elements.mainCharacter}'s Amazing Journey`,
+                    `How ${elements.mainCharacter} Learned About ${elements.theme}`,
+                    `The Tale of ${elements.mainCharacter}`,
+                    `${elements.mainCharacter} and the Power of ${elements.theme}`
+                ];
+                
+                return this.getRandomElement(titleTemplates);
+            }
+
+            generateContent(elements, setting, time, weather, emotion) {
+                // Generate a storytelling-friendly narrative
+                const focus = this.getRandomElement(['adventure', 'friendship', 'learning', 'courage', 'creativity', 'responsibility']);
+                
+                const opening = this.generateOpening(elements.mainCharacter, setting, time, weather, emotion);
+                const problem = this.generateProblem(elements, focus);
+                const journey = this.generateJourney(elements, focus);
+                const resolution = this.generateResolution(elements, focus);
+                const ending = this.generateEnding(elements);
+                
+                return [opening, problem, journey, resolution, ending].join('\n\n');
+            }
+
+            generateOpening(character, setting, time, weather, emotion) {
                 const openings = [
-                    `On a ${weather} ${timeOfDay}, ${mainElement} was feeling ${emotion} while exploring ${setting}.`,
-                    `It was a ${weather} ${timeOfDay} when ${mainElement} discovered something amazing in ${setting}.`,
-                    `${mainElement} had never seen ${setting} look so ${weather} during ${timeOfDay}, and felt ${emotion} about what the day might bring.`,
-                    `The ${weather} ${timeOfDay} in ${setting} was perfect for an adventure, and ${mainElement} was ${emotion} to begin.`
+                    `Once upon a time, in a beautiful ${setting}, there lived ${character}. On this ${weather} ${time}, ${character} woke up feeling ${emotion} and ready for whatever adventures the day might bring.`,
+                    
+                    `It was a ${weather} ${time} in the ${setting} when ${character} started what would become an unforgettable day. Feeling ${emotion} and full of energy, they had no idea how special this day would be.`,
+                    
+                    `In the heart of the ${setting}, ${character} began their morning feeling particularly ${emotion}. The ${weather} ${time} seemed perfect for something wonderful to happen.`
                 ];
                 
                 return this.getRandomElement(openings);
             }
 
-            generateProblem(mainElement, conflict, theme) {
+            generateProblem(elements, focus) {
                 const problems = [
-                    `But soon, ${mainElement} discovered that they ${conflict}. This was connected to ${theme} in ways they hadn't expected.`,
-                    `Everything changed when ${mainElement} realized they ${conflict}. The situation involved ${theme} and would require all their creativity.`,
-                    `That's when ${mainElement} encountered a challenge: they ${conflict}. This problem was deeply connected to ${theme}.`,
-                    `Suddenly, ${mainElement} found themselves in a situation where they ${conflict}. The theme of ${theme} became very important.`
+                    `Soon, ${elements.mainCharacter} discovered that ${elements.secondaryElement || 'a friend'} needed help with something very important. This was a perfect opportunity to learn about ${elements.theme}.`,
+                    
+                    `That's when ${elements.mainCharacter} noticed something interesting. There was a situation involving ${elements.secondaryElement || 'the community'} that needed attention, and it was connected to ${elements.theme}.`,
+                    
+                    `Everything changed when ${elements.mainCharacter} realized they could help solve a problem related to ${elements.theme}. ${elements.secondaryElement || 'Someone special'} was counting on them.`
                 ];
                 
                 return this.getRandomElement(problems);
             }
 
-            generateDevelopment(mainElement, plotDevice, focus) {
-                const focusMap = {
-                    'adventure': 'embarked on an exciting journey',
-                    'friendship': 'reached out to friends for help',
-                    'learning': 'studied and practiced new skills',
-                    'responsibility': 'took charge of the situation',
-                    'creativity': 'thought of innovative solutions',
-                    'courage': 'faced their fears head-on'
+            generateJourney(elements, focus) {
+                const focusActions = {
+                    'adventure': 'embarked on an exciting quest',
+                    'friendship': 'reached out to make new friends and ask for help',
+                    'learning': 'studied hard and practiced new skills',
+                    'responsibility': 'took charge and made a careful plan',
+                    'creativity': 'used their imagination to think of creative solutions',
+                    'courage': 'gathered their courage and faced the challenge bravely'
                 };
                 
-                const action = focusMap[focus] || 'tried different approaches';
+                const action = focusActions[focus] || 'worked hard to solve the problem';
                 
-                const developments = [
-                    `${mainElement} ${action}, but then encountered ${plotDevice}. This changed everything and opened up new possibilities.`,
-                    `At first, ${mainElement} ${action}. However, when ${plotDevice} appeared, they realized they needed to think differently.`,
-                    `${mainElement} decided to ${action}. Along the way, ${plotDevice} taught them something important about themselves.`,
-                    `Working hard, ${mainElement} ${action}. The discovery of ${plotDevice} helped them see the situation in a new light.`
+                const journeys = [
+                    `${elements.mainCharacter} ${action}. Along the way, they met helpful friends and learned important lessons that would guide them to success.`,
+                    
+                    `With determination, ${elements.mainCharacter} ${action}. Each step of the journey taught them something new about ${elements.theme} and about themselves.`,
+                    
+                    `${elements.mainCharacter} knew what needed to be done and ${action}. The adventure was full of wonderful discoveries and moments of growth.`,
+
+                    `Filled with hope, ${elements.mainCharacter} ${action}. They discovered that sometimes the most unexpected paths lead to the most beautiful destinations.`,
+
+                    `${elements.mainCharacter} decided to ${action}. Through patience and perseverance, they found that even the biggest challenges could be overcome.`
                 ];
                 
-                return this.getRandomElement(developments);
+                return this.getRandomElement(journeys);
             }
 
-            generateClimax(mainElement, theme, age) {
-                const climaxes = age <= 8 ? [
-                    `With determination and kindness, ${mainElement} found a way to solve the problem. The power of ${theme} helped them succeed.`,
-                    `${mainElement} used their heart and creativity to make everything better. ${theme} proved to be the key to success.`,
-                    `By being brave and caring, ${mainElement} was able to help everyone. ${theme} made all the difference.`,
-                    `${mainElement} discovered that being true to themselves and focusing on ${theme} was the answer they needed.`
-                ] : [
-                    `Through perseverance and wisdom, ${mainElement} navigated the challenges. Their understanding of ${theme} became crucial to the solution.`,
-                    `${mainElement} applied everything they had learned about ${theme} to overcome the obstacles. Their growth was evident in their approach.`,
-                    `Drawing on inner strength and the lessons of ${theme}, ${mainElement} found a path forward that helped everyone involved.`,
-                    `${mainElement} realized that ${theme} wasn't just about the immediate problem, but about becoming the person they were meant to be.`
-                ];
-                
-                return this.getRandomElement(climaxes);
-            }
+            generateResolution(elements, focus) {
+                const resolutions = [
+                    `Using everything they had learned about ${elements.theme}, ${elements.mainCharacter} found the perfect way to help. ${elements.secondaryElement || 'Everyone'} was amazed by their kindness and wisdom.`,
+                    
+                    `With a heart full of understanding, ${elements.mainCharacter} solved the problem in the most wonderful way. The power of ${elements.theme} made all the difference.`,
+                    
+                    `${elements.mainCharacter} discovered that ${elements.theme} was the key to making everything better. Their caring actions brought joy and hope to all who witnessed them.`,
 
-            generateResolution(mainElement, lesson, age) {
-                const resolutions = age <= 8 ? [
-                    `In the end, ${mainElement} learned that ${lesson}. Everyone was happy, and they all celebrated their success together.`,
-                    `${mainElement} felt proud of what they accomplished and understood that ${lesson}. It was a day they would never forget.`,
-                    `The adventure taught ${mainElement} that ${lesson}. They went home with a big smile and a heart full of joy.`,
-                    `${mainElement} discovered the most important thing of all: ${lesson}. From that day on, everything was brighter.`
-                ] : [
-                    `The experience transformed ${mainElement}'s understanding, teaching them that ${lesson}. This wisdom would guide them in future challenges.`,
-                    `${mainElement} emerged from the adventure with a deeper appreciation for how ${lesson}. The lessons learned became part of who they were.`,
-                    `Through this journey, ${mainElement} gained invaluable insight: ${lesson}. This knowledge would serve them well in all their future endeavors.`,
-                    `${mainElement} concluded their adventure with a profound realization that ${lesson}. This understanding opened new possibilities for growth and connection.`
+                    `Through gentle persistence and clever thinking, ${elements.mainCharacter} found a solution that helped everyone. The lesson of ${elements.theme} shone brightly through their actions.`,
+
+                    `${elements.mainCharacter} combined their natural talents with deep understanding of ${elements.theme}, creating a solution that was both beautiful and effective.`,
+
+                    `In a moment of inspiration, ${elements.mainCharacter} realized that ${elements.theme} wasn't just an idea—it was a powerful force that could change everything for the better.`
                 ];
                 
                 return this.getRandomElement(resolutions);
             }
 
-            getRandomElement(array) {
-                return array[Math.floor(Math.random() * array.length)];
+            generateEnding(elements) {
+                const endings = [
+                    `From that day forward, ${elements.mainCharacter} became known throughout the land for their wisdom and kindness. They continued to help others and share the wonderful lessons they had learned, making the world a brighter place for everyone.`,
+                    
+                    `${elements.mainCharacter} returned home that evening with a heart full of joy and pride. They had discovered that the greatest adventures aren't just about exciting journeys—they're about the love and friendship we share along the way.`,
+                    
+                    `The story of ${elements.mainCharacter} spread far and wide, inspiring others to believe in themselves and the power of ${elements.theme}. And whenever children heard this tale, they too felt brave enough to follow their own dreams.`,
+
+                    `As the stars came out that night, ${elements.mainCharacter} smiled peacefully, knowing they had made a real difference. They fell asleep dreaming of tomorrow's adventures and all the good they could do in the world.`,
+
+                    `${elements.mainCharacter} learned that every ending is really just a new beginning. With their newfound understanding of ${elements.theme}, they were ready for whatever wonderful adventures life would bring next.`,
+
+                    `And so ${elements.mainCharacter} discovered that the most magical thing of all isn't magic spells or special powers—it's the love we share and the kindness we show to others. The end... or perhaps, the beginning of many more beautiful stories.`
+                ];
+                
+                return this.getRandomElement(endings);
             }
 
-            capitalize(str) {
-                return str.charAt(0).toUpperCase() + str.slice(1);
+            getRandomElement(array) {
+                return array[Math.floor(Math.random() * array.length)];
             }
         }
 
@@ -517,8 +479,6 @@ Examples:
 
         async function generateStory() {
             const hints = document.getElementById('hints').value.trim();
-            const age = parseInt(document.getElementById('age').value);
-            const storyFocus = document.getElementById('storyFocus').value;
 
             if (!hints) {
                 alert('Please enter some story elements (characters, themes, settings)!');
@@ -545,21 +505,21 @@ Examples:
                 thinkingContent.innerHTML = `🔍 Analyzing input: "${hints}"...`;
                 await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                thinkingContent.innerHTML = '🎭 Creating unique characters and setting...';
+                thinkingContent.innerHTML = '🎭 Creating characters and setting atmosphere...';
                 await new Promise(resolve => setTimeout(resolve, 1200));
                 
-                thinkingContent.innerHTML = '📝 Building story structure and plot...';
+                thinkingContent.innerHTML = '📝 Building engaging story for storytelling...';
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
-                thinkingContent.innerHTML = '🎨 Adding creative elements and emotions...';
+                thinkingContent.innerHTML = '🎨 Adding vivid descriptions and natural flow...';
                 await new Promise(resolve => setTimeout(resolve, 800));
                 
-                thinkingContent.innerHTML = '✨ Finalizing your unique story...';
+                thinkingContent.innerHTML = '✨ Finalizing your storytelling masterpiece...';
                 await new Promise(resolve => setTimeout(resolve, 500));
                 
                 // Generate the actual story
-                const story = storyAI.generateStory(hints, age, storyFocus);
-                displayStory(`# ${story.title}\n\n${story.content}\n\n*Unique Story ID: ${story.id} - Generated by AI*`);
+                const story = storyAI.generateStory(hints);
+                displayStory(`# ${story.title}\n\n${story.content}\n\n*Story ID: ${story.id} - Perfect for storytelling!*`);
                 
                 thinkingDisplay.classList.remove('show');
             } catch (error) {
