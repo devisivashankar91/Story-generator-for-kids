@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Story Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .setup-section {
+            background: #fff5f5;
+            border: 2px solid #feb2b2;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .setup-section h3 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+
+        .setup-section p {
+            color: #744444;
+            margin-bottom: 15px;
+        }
+
+        .api-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .hints-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .hints-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .age-input, .length-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .age-input:focus, .length-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .story-output {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            min-height: 300px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .story-output.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .copy-btn, .regenerate-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .regenerate-btn {
+            background: #ed8936;
+        }
+
+        .copy-btn:hover {
+            background: #38a169;
+        }
+
+        .regenerate-btn:hover {
+            background: #dd6b20;
+        }
+
+        .example {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .example strong {
+            color: #667eea;
+        }
+
+        .thinking-display {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #2d5016;
+            display: none;
+        }
+
+        .thinking-display.show {
+            display: block;
+        }
+
+        .cost-info {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 AI Story Generator</h1>
+            <p>Create intelligent, lengthy stories with real AI understanding!</p>
+        </div>
+
+        <div class="setup-section" id="setupSection">
+            <h3>⚙️ AI Setup Required</h3>
+            <p>To use advanced AI features (character recognition, intelligent storytelling), you'll need an OpenAI API key:</p>
+            <input type="password" id="apiKey" class="api-input" placeholder="Enter your OpenAI API key (sk-...)">
+            <p><small>Get your key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> - Cost: ~$0.01-0.03 per story</small></p>
+            <button onclick="saveApiKey()" style="background: #48bb78; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Save API Key</button>
+        </div>
+
+        <div class="example">
+            <strong>Advanced Examples:</strong><br>
+            • "Sprunki cartoon characters, musical competition, teamwork lesson" - AI will research Sprunki characters!<br>
+            • "Bluey characters, lost toy, problem solving, empathy" - Uses real character names and personalities<br>
+            • "Marvel superheroes, environmental crisis, responsibility" - Incorporates actual superhero traits
+        </div>
+
+        <div class="input-group">
+            <label for="hints">Story Elements (characters, shows, themes, problems):</label>
+            <textarea 
+                id="hints" 
+                class="hints-input" 
+                placeholder="Enter any combination: characters (real or fictional), shows/cartoons, themes, objects, problems to solve...
+                
+Examples:
+- Sprunki characters, music contest, friendship
+- Paw Patrol dogs, environmental cleanup, teamwork
+- Harry Potter characters, time management, school stress
+- Among Us crewmates, communication problems, trust"
+            ></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <label for="age">Child's Age:</label>
+                    <input type="number" id="age" class="age-input" min="1" max="18" value="7" placeholder="Age">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <label for="storyFocus">Story Focus:</label>
+                    <select id="storyFocus" class="length-select">
+                        <option value="adventure">Adventure & Problem Solving</option>
+                        <option value="friendship">Friendship & Social Skills</option>
+                        <option value="learning">Learning & Education</option>
+                        <option value="emotional">Emotional Intelligence</option>
+                        <option value="creativity">Creativity & Imagination</option>
+                        <option value="responsibility">Responsibility & Growing Up</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="cost-info">
+            Demo Mode: FREE Forever • AI Mode: $0.01-0.03 per story • Length: 800-1500 words
+        </div>
+
+        <button id="generateBtn" class="generate-btn" onclick="generateStory()">🧠 Generate AI Story</button>
+
+        <div id="thinkingDisplay" class="thinking-display">
+            <strong>🤔 AI Thinking Process:</strong>
+            <div id="thinkingContent"></div>
+        </div>
+
+        <div id="storyOutput" class="story-output"></div>
+
+        <div id="actionButtons" style="display: none;">
+            <button id="copyBtn" class="copy-btn" onclick="copyStory()">📋 Copy Story</button>
+            <button id="regenerateBtn" class="regenerate-btn" onclick="regenerateStory()">🔄 Generate Another Version</button>
+        </div>
+    </div>
+
+    <script>
+        let currentApiKey = '';
+        let currentStory = '';
+        let currentPrompt = '';
+
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (apiKey.startsWith('sk-')) {
+                currentApiKey = apiKey;
+                document.getElementById('setupSection').style.display = 'none';
+                alert('API key saved! You can now generate intelligent stories.');
+            } else {
+                alert('Please enter a valid OpenAI API key (starts with sk-)');
+            }
+        }
+
+        async function generateStory() {
+            const hints = document.getElementById('hints').value.trim();
+            const age = parseInt(document.getElementById('age').value);
+            const storyFocus = document.getElementById('storyFocus').value;
+
+            if (!hints) {
+                alert('Please enter some story elements!');
+                return;
+            }
+
+            if (!currentApiKey) {
+                alert('Please set up your API key first or use Demo Mode!');
+                return;
+            }
+
+            // Show loading state
+            const generateBtn = document.getElementById('generateBtn');
+            const storyOutput = document.getElementById('storyOutput');
+            const thinkingDisplay = document.getElementById('thinkingDisplay');
+            const thinkingContent = document.getElementById('thinkingContent');
+            
+            generateBtn.disabled = true;
+            generateBtn.textContent = '🧠 AI is thinking...';
+            storyOutput.classList.add('show');
+            storyOutput.innerHTML = '<div class="loading">✨ AI is analyzing your elements and crafting a unique story...</div>';
+            thinkingDisplay.classList.add('show');
+            thinkingContent.innerHTML = 'Analyzing story elements...';
+
+            try {
+                const story = await callOpenAI(hints, age, storyFocus, thinkingContent);
+                displayStory(story);
+            } catch (error) {
+                console.error('Error:', error);
+                storyOutput.innerHTML = `<div style="color: red;">Error generating story: ${error.message}</div>`;
+            }
+
+            generateBtn.disabled = false;
+            generateBtn.textContent = '🧠 Generate AI Story';
+        }
+
+        async function callOpenAI(hints, age, storyFocus, thinkingContent) {
+            thinkingContent.innerHTML = 'Building comprehensive story prompt...';
+            
+            // Create a sophisticated prompt that handles character recognition and meaningful integration
+            const systemPrompt = `You are an expert children's story writer with deep knowledge of popular culture, cartoons, games, and characters. Your task is to create engaging, lengthy stories (800-1500 words) that meaningfully incorporate ALL provided elements.
+
+CRITICAL REQUIREMENTS:
+1. RESEARCH MODE: When given character/show names (like "Sprunki characters", "Bluey characters", "Paw Patrol dogs"), you must use your knowledge to include ACTUAL character names, personalities, and traits from those properties.
+
+2. MEANINGFUL INTEGRATION: Every single element provided must be woven meaningfully into the story - not just mentioned, but integral to the plot.
+
+3. CORE PROBLEM: Every story must have a central problem/challenge that teaches a valuable lesson appropriate for the age.
+
+4. LENGTH: Create substantial stories (800-1500 words) with rich descriptions, dialogue, and character development.
+
+5. AGE APPROPRIATENESS: Adjust vocabulary, complexity, and themes for age ${age}.
+
+STORY FOCUS: ${storyFocus}
+
+Please think through your approach and show your reasoning process.`;
+
+            const userPrompt = `Create a lengthy, engaging story incorporating ALL of these elements: ${hints}
+
+Child's age: ${age}
+Story focus: ${storyFocus}
+
+INSTRUCTIONS:
+1. First, identify any recognizable characters/properties and their traits
+2. Design a central problem that requires solving
+3. Weave ALL elements meaningfully into the narrative
+4. Include dialogue, rich descriptions, and character development
+5. Ensure the story teaches a valuable lesson
+6. Make it entertaining and age-appropriate
+
+Show your thinking process, then provide the complete story.`;
+
+            thinkingContent.innerHTML = 'Sending request to AI...';
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${currentApiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userPrompt }
+                    ],
+                    max_tokens: 2000,
+                    temperature: 0.8,
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+            }
+
+            thinkingContent.innerHTML = 'Processing AI response...';
+            const data = await response.json();
+            
+            thinkingContent.innerHTML = 'Story generated successfully! ✅';
+            setTimeout(() => {
+                document.getElementById('thinkingDisplay').classList.remove('show');
+            }, 3000);
+
+            return data.choices[0].message.content;
+        }
+
+        function displayStory(story) {
+            currentStory = story;
+            document.getElementById('storyOutput').innerHTML = story;
+            document.getElementById('actionButtons').style.display = 'block';
+        }
+
+        function copyStory() {
+            navigator.clipboard.writeText(currentStory).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 Copy Story';
+                }, 2000);
+            });
+        }
+
+        function regenerateStory() {
+            document.getElementById('generateBtn').click();
+        }
+
+        // Enhanced demo story generator for testing with variations
+        function createDemoStory(hints, age, focus) {
+            const elements = hints.split(',').map(h => h.trim());
+            const storyVariation = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+            
+            let story = generateStoryOpening(hints, elements, storyVariation);
+            
+            // Add substantial content based on age and focus
+            if (age <= 5) {
+                story += generateYoungStory(elements, focus, storyVariation);
+            } else if (age <= 10) {
+                story += generateMiddleStory(elements, focus, storyVariation);
+            } else {
+                story += generateOlderStory(elements, focus, storyVariation);
+            }
+
+            return story;
+        }
+
+        function generateStoryOpening(hints, elements, variation) {
+            let opening = '';
+            
+            // Character-specific openings
+            if (hints.toLowerCase().includes('sprunki')) {
+                const spunkiOpenings = [
+                    `In the vibrant musical realm of Sprunki, where every sound creates magic, Oren and Simon discovered their harmonies were creating unexpected effects...`,
+                    `The Sprunki music festival was approaching, but something strange was happening to the musical creatures' abilities...`,
+                    `Deep in the Sprunki forest, where melodies grow on trees, the usually cheerful singing had turned into worried whispers...`
+                ];
+                opening = spunkiOpenings[variation - 1] + '\n\n';
+            } else if (hints.toLowerCase().includes('bluey')) {
+                const blueyOpenings = [
+                    `It was a perfectly ordinary morning in Brisbane until Bluey discovered something extraordinary in the backyard...`,
+                    `Bluey and Bingo were playing their favorite game when they stumbled upon a mystery that would require all of their creativity to solve...`,
+                    `When Dad announced a special family challenge, Bluey knew this would be no ordinary weekend adventure...`
+                ];
+                opening = blueyOpenings[variation - 1] + '\n\n';
+            } else if (hints.toLowerCase().includes('paw patrol')) {
+                const pawPatrolOpenings = [
+                    `Adventure Bay was buzzing with excitement until Ryder received an unusual emergency call that would test the Paw Patrol's teamwork like never before...`,
+                    `Marshall, Chase, and the team were training for their annual rescue skills competition when they discovered something that changed everything...`,
+                    `A mysterious problem had appeared in Adventure Bay, and it would take every pup's special skills to figure out what was happening...`
+                ];
+                opening = pawPatrolOpenings[variation - 1] + '\n\n';
+            } else {
+                // Generic openings based on first element
+                const genericOpenings = [
+                    `In a world where ${elements[0] || 'extraordinary beings'} lived, an unexpected discovery would change everything they thought they knew...`,
+                    `The day started like any other, but ${elements[0] || 'our heroes'} were about to face a challenge that would test their courage and friendship...`,
+                    `Nobody could have predicted what would happen when ${elements[0] || 'the main character'} decided to explore beyond the familiar boundaries...`
+                ];
+                opening = genericOpenings[variation - 1] + '\n\n';
+            }
