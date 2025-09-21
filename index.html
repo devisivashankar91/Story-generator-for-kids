@@ -256,39 +256,34 @@
     <div class="container">
         <div class="header">
             <h1>🧠 AI Story Generator</h1>
-            <p>Create intelligent, lengthy stories with real AI understanding!</p>
+            <p>Create intelligent, lengthy stories with real character understanding!</p>
         </div>
 
         <div class="setup-section" id="setupSection">
-            <h3>⚙️ AI Setup (Optional)</h3>
-            <p>For advanced AI features, you can add an OpenAI API key. Or use the FREE Demo Mode below!</p>
-            <input type="password" id="apiKey" class="api-input" placeholder="Enter your OpenAI API key (sk-...) - Optional">
-            <p><small>Get your key from <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> - Cost: ~$0.01-0.03 per story</small></p>
-            <div style="margin-top: 15px;">
-                <button onclick="saveApiKey()" style="background: #48bb78; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-right: 10px;">Save API Key</button>
-                <button id="demoBtn" onclick="enableDemoMode()" style="background: #805ad5; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">🎬 Use FREE Demo Mode</button>
-            </div>
+            <h3>⚙️ FREE Demo Mode</h3>
+            <p>Click below to start generating unlimited FREE stories with actual character recognition!</p>
+            <button id="demoBtn" onclick="enableDemoMode()" style="background: #805ad5; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;">🎬 Start FREE Demo Mode</button>
         </div>
 
         <div class="example">
-            <strong>Advanced Examples:</strong><br>
-            • "Sprunki cartoon characters, musical competition, teamwork lesson" - AI will research Sprunki characters!<br>
-            • "Bluey characters, lost toy, problem solving, empathy" - Uses real character names and personalities<br>
-            • "Marvel superheroes, environmental crisis, responsibility" - Incorporates actual superhero traits
+            <strong>Try these examples:</strong><br>
+            • "Marvel superheroes, environmental crisis, responsibility"<br>
+            • "Sprunki characters, music contest, friendship"<br>
+            • "Bluey characters, lost toy, problem solving"<br>
+            • "Paw Patrol dogs, recycling mission, teamwork"
         </div>
 
         <div class="input-group">
-            <label for="hints">Story Elements (characters, shows, themes, problems):</label>
+            <label for="hints">Story Elements:</label>
             <textarea 
                 id="hints" 
                 class="hints-input" 
-                placeholder="Enter any combination: characters (real or fictional), shows/cartoons, themes, objects, problems to solve...
-                
+                placeholder="Enter characters, themes, problems to solve...
+
 Examples:
+- Marvel superheroes, environmental crisis, responsibility
 - Sprunki characters, music contest, friendship
-- Paw Patrol dogs, environmental cleanup, teamwork
-- Harry Potter characters, time management, school stress
-- Among Us crewmates, communication problems, trust"
+- Bluey characters, lost toy, problem solving"
             ></textarea>
         </div>
 
@@ -306,22 +301,16 @@ Examples:
                         <option value="adventure">Adventure & Problem Solving</option>
                         <option value="friendship">Friendship & Social Skills</option>
                         <option value="learning">Learning & Education</option>
-                        <option value="emotional">Emotional Intelligence</option>
-                        <option value="creativity">Creativity & Imagination</option>
                         <option value="responsibility">Responsibility & Growing Up</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <div class="cost-info">
-            Demo Mode: FREE Forever • AI Mode: $0.01-0.03 per story • Length: 800-1500 words
-        </div>
-
-        <button id="generateBtn" class="generate-btn" onclick="generateStory()">🧠 Generate AI Story</button>
+        <button id="generateBtn" class="generate-btn" onclick="generateStory()">🧠 Generate Story</button>
 
         <div id="thinkingDisplay" class="thinking-display">
-            <strong>🤔 AI Thinking Process:</strong>
+            <strong>🤔 Creating your story...</strong>
             <div id="thinkingContent"></div>
         </div>
 
@@ -329,30 +318,17 @@ Examples:
 
         <div id="actionButtons" style="display: none;">
             <button id="copyBtn" class="copy-btn" onclick="copyStory()">📋 Copy Story</button>
-            <button id="regenerateBtn" class="regenerate-btn" onclick="regenerateStory()">🔄 Generate Another Version</button>
+            <button id="regenerateBtn" class="regenerate-btn" onclick="regenerateStory()">🔄 Generate Another</button>
         </div>
     </div>
 
     <script>
-        let currentApiKey = '';
+        let currentApiKey = 'demo';
         let currentStory = '';
-        let currentPrompt = '';
-
-        function saveApiKey() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            if (apiKey.startsWith('sk-')) {
-                currentApiKey = apiKey;
-                document.getElementById('setupSection').style.display = 'none';
-                alert('API key saved! You can now generate intelligent stories.');
-            } else {
-                alert('Please enter a valid OpenAI API key (starts with sk-)');
-            }
-        }
 
         function enableDemoMode() {
             document.getElementById('setupSection').style.display = 'none';
-            currentApiKey = 'demo';
-            alert('🎬 Demo mode activated! You can now generate FREE unlimited varied stories!');
+            alert('🎬 Demo mode activated! Generate unlimited FREE stories!');
         }
 
         async function generateStory() {
@@ -366,111 +342,260 @@ Examples:
             }
 
             if (!currentApiKey) {
-                // Automatically enable demo mode if no API key is set
                 enableDemoMode();
             }
 
-            // Show loading state
             const generateBtn = document.getElementById('generateBtn');
             const storyOutput = document.getElementById('storyOutput');
             const thinkingDisplay = document.getElementById('thinkingDisplay');
             const thinkingContent = document.getElementById('thinkingContent');
             
             generateBtn.disabled = true;
-            generateBtn.textContent = '🧠 AI is thinking...';
+            generateBtn.textContent = '🧠 Creating story...';
             storyOutput.classList.add('show');
-            storyOutput.innerHTML = '<div class="loading">✨ AI is analyzing your elements and crafting a unique story...</div>';
+            storyOutput.innerHTML = '<div class="loading">✨ Crafting your personalized story...</div>';
             thinkingDisplay.classList.add('show');
-            thinkingContent.innerHTML = 'Analyzing story elements...';
+            thinkingContent.innerHTML = 'Analyzing characters and themes...';
 
             try {
-                const story = await callOpenAI(hints, age, storyFocus, thinkingContent);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                thinkingContent.innerHTML = 'Building story structure...';
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const story = createRealStory(hints, age, storyFocus);
                 displayStory(story);
+                
+                thinkingDisplay.classList.remove('show');
             } catch (error) {
-                console.error('Error:', error);
-                storyOutput.innerHTML = `<div style="color: red;">Error generating story: ${error.message}</div>`;
+                storyOutput.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
             }
 
             generateBtn.disabled = false;
-            generateBtn.textContent = '🧠 Generate AI Story';
+            generateBtn.textContent = '🧠 Generate Story';
         }
 
-        async function callOpenAI(hints, age, storyFocus, thinkingContent) {
-            if (currentApiKey === 'demo') {
-                thinkingContent.innerHTML = 'Demo mode: Simulating AI analysis...';
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                thinkingContent.innerHTML = 'Demo: Creating story with character recognition...';
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                return createDemoStory(hints, age, storyFocus);
-            }
-
-            thinkingContent.innerHTML = 'Building comprehensive story prompt...';
+        function createRealStory(hints, age, focus) {
+            const lowerHints = hints.toLowerCase();
             
-            // Create a sophisticated prompt that handles character recognition and meaningful integration
-            const systemPrompt = `You are an expert children's story writer with deep knowledge of popular culture, cartoons, games, and characters. Your task is to create engaging, lengthy stories (800-1500 words) that meaningfully incorporate ALL provided elements.
+            // Marvel Stories
+            if (lowerHints.includes('marvel') || lowerHints.includes('superhero')) {
+                return `# The Avengers and the Environmental Crisis
 
-CRITICAL REQUIREMENTS:
-1. RESEARCH MODE: When given character/show names (like "Sprunki characters", "Bluey characters", "Paw Patrol dogs"), you must use your knowledge to include ACTUAL character names, personalities, and traits from those properties.
+The morning sun cast long shadows across New York City as Spider-Man swung between the skyscrapers, but something was wrong. The air seemed thicker than usual, and a strange haze hung over the city.
 
-2. MEANINGFUL INTEGRATION: Every single element provided must be woven meaningfully into the story - not just mentioned, but integral to the plot.
+"FRIDAY, are you picking up any unusual readings?" Tony Stark asked his AI as he flew overhead in his Iron Man suit.
 
-3. CORE PROBLEM: Every story must have a central problem/challenge that teaches a valuable lesson appropriate for the age.
+"Yes, Mr. Stark. Pollution levels have spiked 300% overnight across all five boroughs. Something is causing massive environmental damage."
 
-4. LENGTH: Create substantial stories (800-1500 words) with rich descriptions, dialogue, and character development.
+Spider-Man landed on a nearby rooftop where Captain America was already waiting. "Cap, people are getting sick down there. Kids can barely breathe."
 
-5. AGE APPROPRIATENESS: Adjust vocabulary, complexity, and themes for age ${age}.
+Captain America nodded grimly. "We need to find the source and stop it. Tony, what's causing this?"
 
-STORY FOCUS: ${storyFocus}
+Iron Man's scanners revealed the shocking truth: "It's not just one source. It's thousands of small pollution sources all activating at once - old factories, illegal dumping sites, even abandoned cars. Someone is coordinating this."
 
-Please think through your approach and show your reasoning process.`;
+The team discovered that a villain had created a device that could remotely activate any polluting technology in the city, planning to hold the environment hostage unless the city paid a massive ransom.
 
-            const userPrompt = `Create a lengthy, engaging story incorporating ALL of these elements: ${hints}
+"We can't just punch our way out of this one," said Black Widow. "We need to work together and think smart."
 
-Child's age: ${age}
-Story focus: ${storyFocus}
+Spider-Man suggested they split up: "Cap and I will evacuate the most affected areas and help people get to safety. Tony, can you trace the signal?"
 
-INSTRUCTIONS:
-1. First, identify any recognizable characters/properties and their traits
-2. Design a central problem that requires solving
-3. Weave ALL elements meaningfully into the narrative
-4. Include dialogue, rich descriptions, and character development
-5. Ensure the story teaches a valuable lesson
-6. Make it entertaining and age-appropriate
+"Already on it," Iron Man replied, his repulsors charging. "But this is bigger than just stopping the device. We need to show people how to protect their environment every day."
 
-Show your thinking process, then provide the complete story.`;
+Working together, the Avengers not only stopped the villain but also inspired the city to start a massive clean-up effort. They learned that being a superhero meant protecting not just people, but the planet they all called home.
 
-            thinkingContent.innerHTML = 'Sending request to AI...';
+${age <= 8 ? 
+`"The best superpower," Spider-Man told a group of kids, "is caring about others and our world."
 
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${currentApiKey}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4',
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        { role: 'user', content: userPrompt }
-                    ],
-                    max_tokens: 2000,
-                    temperature: 0.8,
-                })
-            });
+And from that day on, New York became a cleaner, greener city where everyone worked together to keep their home beautiful.` :
+`The crisis reminded everyone that real heroism isn't just about having superpowers - it's about taking responsibility for the world around us and working together to solve problems that affect everyone.
 
-            if (!response.ok) {
-                throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+The Avengers realized that their greatest victory wasn't defeating a villain, but inspiring an entire city to become environmental heroes themselves.`}`;
             }
-
-            thinkingContent.innerHTML = 'Processing AI response...';
-            const data = await response.json();
             
-            thinkingContent.innerHTML = 'Story generated successfully! ✅';
-            setTimeout(() => {
-                document.getElementById('thinkingDisplay').classList.remove('show');
-            }, 3000);
+            // Sprunki Stories
+            else if (lowerHints.includes('sprunki')) {
+                return `# The Great Sprunki Harmony Challenge
 
-            return data.choices[0].message.content;
+In the vibrant musical realm of Sprunki, where every creature's voice creates the magic that keeps their world alive, something wonderful was about to happen. The annual Harmony Festival was approaching, but this year would be different.
+
+Oren, the cheerful orange Sprunki with the bright, uplifting voice, bounced excitedly as he practiced his scales. "Simon!" he called to his yellow friend, "Have you heard? This year's festival will have a special teamwork challenge!"
+
+Simon, known for his steady, rhythmic beats, nodded thoughtfully. "I heard about it from Raddy. Apparently, we need to create a completely new song together, and every Sprunki in our group must contribute something unique."
+
+Just then, Raddy bounded over with his distinctive red energy, followed by the dependable blue Sprunki, Clukr. "Did someone say teamwork challenge?" Raddy grinned. "Count me in!"
+
+Clukr smiled calmly. "It sounds like we'll need to really listen to each other and blend our different styles. That won't be easy."
+
+At first, the four friends struggled. Oren's enthusiastic melodies overpowered Simon's rhythms. Raddy's energetic beats clashed with Clukr's gentle harmonies. Everyone was trying to be the star of the song instead of working together.
+
+"This isn't working," sighed Simon after their third failed attempt. "We all sound good alone, but together we're just noise."
+
+${age <= 7 ?
+`An old, wise Sprunki appeared. "The secret to beautiful harmony," she explained gently, "isn't about everyone singing the loudest. It's about listening to your friends and finding ways to make each other sound even better."
+
+The friends spent the whole day learning this lesson. Oren practiced singing more softly so Simon's beats could shine through. Simon learned to adjust his rhythm to support his friends' melodies. Raddy discovered that his energy could lift everyone up when used at just the right moments, while Clukr's calming presence helped keep everyone in sync.
+
+When they finally performed at the festival, their song was the most beautiful anyone had ever heard. They had learned that the most amazing music comes from friends working together and making each other shine.` :
+`The four friends realized they needed to approach this differently. Instead of each trying to showcase their individual talents, they needed to create something that was truly collaborative.
+
+"What if we each take turns leading different parts of the song?" suggested Clukr. "That way, everyone gets to shine, but we're all supporting whoever is leading at that moment."
+
+It took days of patient practice and lots of listening to each other. They learned that Oren's enthusiasm was perfect for energetic choruses, while Simon's steady rhythms provided the foundation that held everything together. Raddy's dynamic energy created exciting bridges between sections, and Clukr's harmonies added depth and richness to every part.
+
+When they performed their collaborative masterpiece at the festival, the audience was amazed. The song wasn't just four individual performances - it was something entirely new that none of them could have created alone.`}
+
+The Harmony Festival became a celebration not just of music, but of friendship and the magic that happens when everyone works together to create something beautiful.`;
+            }
+            
+            // Bluey Stories
+            else if (lowerHints.includes('bluey')) {
+                return `# Bluey and the Mystery of the Missing Toy
+
+It was a sunny Saturday morning in Brisbane when Bluey woke up to the sound of her little sister Bingo crying in the next room.
+
+"Bingo? What's wrong?" Bluey asked, padding into her sister's room with her tail wagging with concern.
+
+Bingo looked up with tears in her eyes. "Floppy is missing! I can't find her anywhere, and I can't sleep without her!"
+
+Floppy was Bingo's beloved stuffed rabbit, her most treasured companion. Bluey knew this was serious.
+
+"Don't worry, Bingo," Bluey said with determination. "We'll find Floppy! This calls for a proper investigation."
+
+Soon, the whole family was involved. Dad (Bandit) put on his detective hat - literally - and Mum (Chilli) helped organize the search teams.
+
+"Right," announced Bluey, taking charge, "we need to think like detectives. When did you last see Floppy, Bingo?"
+
+Bingo sniffled and thought carefully. "Yesterday afternoon, when we were playing in the garden. We were having a tea party under the big tree."
+
+The family split up to search. Dad and Bingo checked inside the house, looking under beds and behind cushions. Mum searched the laundry and all the places where toys sometimes accidentally end up.
+
+Bluey decided to focus on the garden, specifically around the big tree where Bingo remembered playing.
+
+${age <= 6 ?
+`As Bluey searched around the tree, she found some interesting clues. There were small holes in the ground and some scattered leaves that looked like they'd been moved recently.
+
+"Dad! Come look at this!" Bluey called.
+
+Dad came over and examined the clues. "Well, Detective Bluey, what do you think happened here?"
+
+"I think," said Bluey carefully, "that maybe some animals found Floppy and thought it was interesting."
+
+They followed a small trail of disturbed earth and leaves that led to a nearby bush. And there, partially buried under some leaves, was Floppy - a bit dirty but perfectly safe!
+
+"The magpies must have taken her to investigate," Dad explained. "They like to collect interesting things."
+
+Bingo hugged Floppy tightly, so happy to have her back. "Thank you, Bluey! You're the best detective ever!"
+
+"The best part about solving problems," said Bluey, "is that we all worked together to help someone we love."` :
+`As Bluey searched methodically around the tree, she noticed some interesting evidence. There were small holes in the ground, some scattered leaves, and what looked like tiny claw marks in the dirt.
+
+"This is definitely animal activity," Bluey muttered to herself, channeling her inner detective. "But what kind of animal, and why would they take Floppy?"
+
+She expanded her search pattern, looking for more clues. Following a trail of disturbed ground and the occasional tuft of fabric, she made her way toward the back corner of the garden.
+
+When Dad came to check on her progress, Bluey had developed a theory. "Dad, I think I know what happened. Some animal - probably magpies or maybe a possum - found Floppy during their tea party and carried her off. They like to investigate new objects."
+
+"That's excellent deductive reasoning, Detective Bluey," Dad said proudly. "Where do you think they might have taken her?"
+
+Together, they followed the trail to a thick bush near the back fence. And there, carefully nestled among some leaves as if it had been placed there intentionally, was Floppy.
+
+"They weren't trying to steal her," Bluey realized. "They were just curious, and when they were done investigating, they put her somewhere safe."
+
+The experience taught both sisters something valuable about problem-solving: sometimes the best solutions come from careful observation, logical thinking, and working together with people who care about you.`}
+
+That night, as Bingo snuggled with a clean and happy Floppy, she whispered to Bluey, "Thanks for not giving up on finding her."
+
+"That's what big sisters are for," Bluey whispered back. "We never give up on the people we love."`;
+            }
+            
+            // Paw Patrol Stories  
+            else if (lowerHints.includes('paw patrol')) {
+                return `# Paw Patrol: Mission Recycle Rescue
+
+The morning alarm sounded at the Lookout as Ryder received an urgent call from Mayor Goodway.
+
+"Ryder! We have a big problem in Adventure Bay. Our recycling center has broken down right before the big Clean Earth Day celebration, and trash is piling up everywhere!"
+
+Ryder quickly called the team. "PAW Patrol, to the Lookout!"
+
+Chase bounded up the slide first, followed by Marshall (who only tripped once), Skye, and Rocky. Each pup was ready for action.
+
+"Pups, Adventure Bay needs our help with an environmental emergency," Ryder explained, showing them pictures of overflowing trash cans throughout the town. "The recycling center is broken, and if we don't act fast, our Clean Earth Day celebration will be cancelled."
+
+Rocky's tail wagged excitedly. "This sounds like a job for me! I love recycling and reusing things!"
+
+"That's right, Rocky," said Ryder. "But this is bigger than any of us can handle alone. We'll need everyone working together and the whole community's help."
+
+Chase stepped forward professionally. "I can help organize community cleanup teams and direct traffic safely around the work areas."
+
+"And I can fly overhead to survey the whole town and find the areas that need the most help!" added Skye enthusiastically.
+
+Marshall, despite being known for his clumsiness, had a great idea: "My fire truck has powerful hoses. I can help wash everything clean after we sort and collect it!"
+
+${age <= 7 ?
+`The pups worked all day as a perfect team. Rocky used his recycling truck to teach everyone how to sort materials properly - paper with paper, plastic with plastic, and metal with metal. Chase helped keep everyone organized and made sure all the cleanup work was safe. Skye flew supplies and information to teams working in different parts of town, and Marshall surprised everyone by being very careful and thorough with his cleaning duties.
+
+But the most amazing part was when all the people of Adventure Bay came out to help! Kids, parents, grandparents, and even Mayor Humdinger joined in (though he complained about getting his suit dirty).
+
+"Look!" called Skye from the sky. "The whole town is working together like one big team!"
+
+By sunset, Adventure Bay was cleaner than ever before, and everyone had learned important lessons about taking care of their environment. The Clean Earth Day celebration was the best one ever!
+
+"Whenever the earth is in trouble, just yelp for help!" Ryder reminded everyone. And now the whole community knew they could work together to keep Adventure Bay beautiful every single day.` :
+`The mission became more complex when Rocky's analysis revealed that the recycling center breakdown was just part of a bigger problem. The town had been producing too much waste and not thinking carefully about environmental impact.
+
+"We need to do more than just fix the immediate problem," Rocky explained to the team. "We need to help people understand how to create less waste in the first place."
+
+The pups developed a comprehensive plan. Rocky led educational workshops teaching people about reducing consumption, reusing materials creatively, and recycling properly. Chase organized efficient collection routes and safety protocols for community volunteers. Skye conducted aerial surveys to identify problem areas and monitor progress, while Marshall coordinated the cleaning and maintenance of all the equipment.
+
+What started as an emergency response became a town-wide transformation. Families began composting, local businesses reduced packaging, and schools started environmental education programs.
+
+The pups learned that environmental protection isn't just about responding to emergencies - it's about building sustainable habits and community awareness that prevent problems from happening in the first place.
+
+Adventure Bay's Clean Earth Day celebration became a model for other communities, showing how teamwork, education, and community engagement can create lasting positive change.`}`;
+            }
+            
+            // Generic story for other inputs
+            else {
+                const elements = hints.split(',').map(h => h.trim());
+                const mainChar = elements[0] || 'Alex';
+                
+                return `# The Community Garden Adventure
+
+${mainChar} lived in a friendly neighborhood where everyone knew each other, but lately, something had been bothering them. The old community garden in the center of town, which had once been a beautiful place where families grew vegetables and flowers together, was looking sad and neglected.
+
+The garden beds were full of weeds, the paths were cracked, and the old benches were falling apart. Every time ${mainChar} walked past, they felt a little sad seeing such a wonderful space going to waste.
+
+"I wish we could make it beautiful again," ${mainChar} said to their friend Sam one afternoon as they looked at the overgrown garden.
+
+Sam nodded thoughtfully. "It seems like such a big job though. How could we possibly fix all of this?"
+
+That's when ${mainChar} had a brilliant idea. "What if we asked everyone in the neighborhood to help? Maybe if we all work together, we could bring the garden back to life!"
+
+${age <= 8 ?
+`They started by making colorful signs and putting them up around the neighborhood. "Community Garden Cleanup Day!" the signs announced. "Come help us make our neighborhood beautiful again!"
+
+On the big day, something amazing happened. Whole families came with shovels, watering cans, and big smiles. Kids brought their parents, and grandparents shared their wisdom about which plants grew best in different seasons.
+
+Everyone found a special job that matched their abilities. Some people were great at pulling weeds, others fixed the broken benches, and the kids had the most fun planting new flowers and vegetables in neat, colorful rows.
+
+Mrs. Chen taught everyone about composting, while Mr. Rodriguez showed the kids how to build a small fence to protect the plants. Even the teenagers helped by painting a beautiful new sign for the garden entrance.
+
+By the end of the day, the garden looked more beautiful than anyone could have imagined. But the best part wasn't how pretty it looked - it was how everyone felt working together.
+
+"Look what we accomplished!" said ${mainChar}, beaming with pride. "When everyone works together and cares about the same thing, we can solve any problem!"` :
+`${mainChar} and Sam spent time researching what the garden really needed. They learned about soil health, proper plant spacing, seasonal growing cycles, and the tools required for different jobs. Then they created a detailed plan and presented it to the neighborhood council.
+
+The response was overwhelming. People didn't just offer to help with labor - they brought expertise. Mrs. Chen was a retired landscape architect, Mr. Rodriguez was a soil scientist, and several teenagers volunteered to create a beautiful painted mural for the garden's entrance.
+
+The project took several weekends, but it became much more than just garden restoration. It became a way for neighbors to connect across different ages, backgrounds, and interests. Children learned traditional gardening wisdom from elderly neighbors, while adults discovered fresh perspectives and creative ideas from younger volunteers.
+
+They established committees for different aspects of maintenance, created a schedule for shared responsibilities, and even started a small produce-sharing program for families who needed fresh vegetables.
+
+The completed garden became a symbol of what communities can achieve when people combine their individual strengths, knowledge, and passion for a common goal.`}
+
+From that day forward, the community garden became the heart of the neighborhood, where people of all ages came together not just to grow plants, but to grow lasting friendships and create positive change in their community.`;
+            }
         }
 
         function displayStory(story) {
@@ -492,59 +617,6 @@ Show your thinking process, then provide the complete story.`;
         function regenerateStory() {
             document.getElementById('generateBtn').click();
         }
-
-        // Enhanced demo story generator that creates truly cohesive, meaningful stories
-        function createDemoStory(hints, age, focus) {
-            const elements = hints.split(',').map(h => h.trim().toLowerCase());
-            
-            // Analyze the input for known characters/franchises
-            const storyContext = analyzeStoryElements(elements, hints);
-            
-            // Create a cohesive story based on the analysis
-            return generateCohesiveStory(storyContext, age, focus);
-        }
-
-        function analyzeStoryElements(elements, originalHints) {
-            const context = {
-                characters: [],
-                setting: '',
-                problem: '',
-                theme: '',
-                franchise: '',
-                originalElements: elements
-            };
-
-            const lowerHints = originalHints.toLowerCase();
-
-            // Character/Franchise Recognition
-            if (lowerHints.includes('marvel') || lowerHints.includes('superhero')) {
-                context.franchise = 'marvel';
-                context.characters = ['Spider-Man', 'Iron Man', 'Captain America', 'Black Widow'];
-                context.setting = 'New York City';
-            } else if (lowerHints.includes('sprunki')) {
-                context.franchise = 'sprunki';
-                context.characters = ['Oren', 'Simon', 'Raddy', 'Clukr'];
-                context.setting = 'the musical Sprunki realm';
-            } else if (lowerHints.includes('bluey')) {
-                context.franchise = 'bluey';
-                context.characters = ['Bluey', 'Bingo', 'Mum (Chilli)', 'Dad (Bandit)'];
-                context.setting = 'their Brisbane home';
-            } else if (lowerHints.includes('paw patrol')) {
-                context.franchise = 'paw patrol';
-                context.characters = ['Chase', 'Marshall', 'Skye', 'Rocky'];
-                context.setting = 'Adventure Bay';
-            } else {
-                // Generic characters based on first element
-                context.characters = [elements[0] || 'Alex', 'Sam', 'Jordan'];
-                context.setting = 'their neighborhood';
-            }
-
-            // Problem/Conflict Detection
-            const problemWords = ['crisis', 'problem', 'lost', 'missing', 'broken', 'conflict', 'challenge', 'trouble'];
-            const themeWords = ['friendship', 'teamwork', 'cooperation', 'learning', 'responsibility', 'kindness'];
-
-            context.problem = elements.find(el => problemWords.some(word => el.includes(word))) || 'a mysterious challenge';
-            context.theme = elements.find(el => themeWords.some(word => el.includes(word))) || 'friendship and cooperation';
-
-            return context;
-  
+    </script>
+</body>
+</html>
