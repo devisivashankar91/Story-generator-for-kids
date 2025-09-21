@@ -493,160 +493,58 @@ Show your thinking process, then provide the complete story.`;
             document.getElementById('generateBtn').click();
         }
 
-        // Enhanced demo story generator for testing with variations
+        // Enhanced demo story generator that creates truly cohesive, meaningful stories
         function createDemoStory(hints, age, focus) {
-            const elements = hints.split(',').map(h => h.trim());
-            const storyVariation = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
+            const elements = hints.split(',').map(h => h.trim().toLowerCase());
             
-            let story = generateStoryOpening(hints, elements, storyVariation);
+            // Analyze the input for known characters/franchises
+            const storyContext = analyzeStoryElements(elements, hints);
             
-            // Add substantial content based on age and focus
-            if (age <= 5) {
-                story += generateYoungStory(elements, focus, storyVariation);
-            } else if (age <= 10) {
-                story += generateMiddleStory(elements, focus, storyVariation);
-            } else {
-                story += generateOlderStory(elements, focus, storyVariation);
-            }
-
-            return story;
+            // Create a cohesive story based on the analysis
+            return generateCohesiveStory(storyContext, age, focus);
         }
 
-        function generateStoryOpening(hints, elements, variation) {
-            let opening = '';
-            
-            // Character-specific openings
-            if (hints.toLowerCase().includes('sprunki')) {
-                const spunkiOpenings = [
-                    `In the vibrant musical realm of Sprunki, where every sound creates magic, Oren and Simon discovered their harmonies were creating unexpected effects...`,
-                    `The Sprunki music festival was approaching, but something strange was happening to the musical creatures' abilities...`,
-                    `Deep in the Sprunki forest, where melodies grow on trees, the usually cheerful singing had turned into worried whispers...`
-                ];
-                opening = spunkiOpenings[variation - 1] + '\n\n';
-            } else if (hints.toLowerCase().includes('bluey')) {
-                const blueyOpenings = [
-                    `It was a perfectly ordinary morning in Brisbane until Bluey discovered something extraordinary in the backyard...`,
-                    `Bluey and Bingo were playing their favorite game when they stumbled upon a mystery that would require all of their creativity to solve...`,
-                    `When Dad announced a special family challenge, Bluey knew this would be no ordinary weekend adventure...`
-                ];
-                opening = blueyOpenings[variation - 1] + '\n\n';
-            } else if (hints.toLowerCase().includes('paw patrol')) {
-                const pawPatrolOpenings = [
-                    `Adventure Bay was buzzing with excitement until Ryder received an unusual emergency call that would test the Paw Patrol's teamwork like never before...`,
-                    `Marshall, Chase, and the team were training for their annual rescue skills competition when they discovered something that changed everything...`,
-                    `A mysterious problem had appeared in Adventure Bay, and it would take every pup's special skills to figure out what was happening...`
-                ];
-                opening = pawPatrolOpenings[variation - 1] + '\n\n';
-            } else {
-                // Generic openings based on first element
-                const genericOpenings = [
-                    `In a world where ${elements[0] || 'extraordinary beings'} lived, an unexpected discovery would change everything they thought they knew...`,
-                    `The day started like any other, but ${elements[0] || 'our heroes'} were about to face a challenge that would test their courage and friendship...`,
-                    `Nobody could have predicted what would happen when ${elements[0] || 'the main character'} decided to explore beyond the familiar boundaries...`
-                ];
-                opening = genericOpenings[variation - 1] + '\n\n';
-            }
-            
-            return `# ${generateRandomTitle(elements, variation)}\n\n${opening}`;
-        }
-
-        function generateRandomTitle(elements, variation) {
-            const titleTemplates = [
-                `The Mystery of ${elements[1] || 'the Missing Element'}`,
-                `${elements[0] || 'Heroes'} and the Great Challenge`,
-                `The Adventure of ${elements[2] || 'Discovery'} and Friendship`,
-                `Quest for the ${elements[1] || 'Lost Treasure'}`,
-                `The Day ${elements[0] || 'Everything'} Changed Forever`
-            ];
-            return titleTemplates[(variation - 1) + Math.floor(Math.random() * 2)];
-        }
-
-        function generateYoungStory(elements, focus, variation) {
-            const storyVersions = {
-                adventure: [
-                    `The brave ${elements[0]} decided to go on a big adventure! They packed their favorite snacks and set off to find ${elements[1] || 'something special'}.\n\nOn the way, they met a friendly helper who said, "I know where to find what you're looking for, but we need to work together!"\n\nThey climbed over soft hills and crossed babbling brooks. When they finally found ${elements[2] || 'the treasure'}, they learned that sharing the discovery made it even more special.\n\n"The best adventures," said their new friend, "happen when we help each other!" And they all lived happily ever after.`,
-                    
-                    `Once upon a time, ${elements[0]} woke up to find that ${elements[1] || 'something important'} was missing! "Oh no!" they said, "How will we solve this?"\n\nA wise old ${elements[2] || 'owl'} appeared and said, "Don't worry! Every problem has a solution if you think hard and ask for help."\n\nTogether, they searched high and low. They looked in the clouds and under the flowers. Finally, they found what they were looking for in the most unexpected place!\n\n"You see," smiled the ${elements[2] || 'owl'}, "good things come to those who never give up and are kind to others."`,
-                    
-                    `${elements[0]} loved to play, but today was different. Today, they noticed that ${elements[1] || 'their friend'} looked sad.\n\n"What's wrong?" asked ${elements[0]} kindly.\n\n"I lost my ${elements[2] || 'favorite toy'}," said their friend. "Now I can't play anymore."\n\n${elements[0]} had an idea! "Let's look for it together! And while we search, we can play games to keep our spirits up!"\n\nThey played hide-and-seek with butterflies, had races with rabbits, and sang songs with the birds. And guess what? While they were having fun, they found the lost ${elements[2] || 'toy'}!\n\n"Thank you for helping me and making me smile again," said their friend. And they played together happily ever after.`
-                ],
-                
-                friendship: [
-                    `${elements[0]} had many friends, but today felt different. ${elements[1] || 'Someone new'} had arrived, and they looked a little scared and lonely.\n\n"Hello!" said ${elements[0]} with a big, warm smile. "Would you like to play with us?"\n\nAt first, ${elements[1] || 'the new friend'} was shy. But ${elements[0]} was patient and kind. They showed ${elements[1]} all their favorite games and shared their ${elements[2] || 'special snacks'}.\n\nSoon, everyone was laughing and playing together. "I was worried nobody would like me," said ${elements[1]}.\n\n"We like you just the way you are!" said ${elements[0]}. And from that day on, they were the best of friends.`,
-                    
-                    `When ${elements[0]} and ${elements[1] || 'their best friend'} both wanted to play with the same ${elements[2] || 'toy'}, they didn't know what to do.\n\n"I want to play with it!" said ${elements[0]}.\n"But I want to play with it too!" said ${elements[1]}.\n\nThey sat quietly for a moment, thinking. Then ${elements[0]} had a wonderful idea!\n\n"What if we take turns? You can play for five minutes, then I'll play for five minutes!"\n\n${elements[1]} smiled. "That's a great idea! And maybe we can even play together!"\n\nAnd that's exactly what they did. They learned that sharing made playing even more fun!`,
-                    
-                    `${elements[0]} was feeling grumpy. Nothing seemed to be going right today. First, it rained during playtime. Then, their ${elements[2] || 'favorite food'} wasn't ready for lunch.\n\nBut then ${elements[1] || 'a caring friend'} came over with a big hug and said, "Sometimes days are hard, but friends can make them better!"\n\nTogether, they made up silly dances for the rainy day. They drew colorful pictures and told funny jokes. Soon, ${elements[0]} was giggling and smiling again.\n\n"Thank you for being such a good friend," said ${elements[0]}. "You made my whole day brighter!" And they spent the rest of the day spreading joy to everyone they met.`
-                ]
+        function analyzeStoryElements(elements, originalHints) {
+            const context = {
+                characters: [],
+                setting: '',
+                problem: '',
+                theme: '',
+                franchise: '',
+                originalElements: elements
             };
 
-            const focusStories = storyVersions[focus] || storyVersions.adventure;
-            return focusStories[variation - 1] || focusStories[0];
-        }
+            const lowerHints = originalHints.toLowerCase();
 
-        function generateMiddleStory(elements, focus, variation) {
-            const problemTypes = [
-                `The ${elements[1] || 'community center'} that everyone loved was facing a serious problem`,
-                `A mysterious change had occurred with ${elements[1] || 'the school playground'}`,
-                `The annual ${elements[1] || 'friendship festival'} was in jeopardy`
-            ];
-
-            const solutions = [
-                `By combining everyone's unique talents and perspectives`,
-                `Through careful research and creative problem-solving`,
-                `With determination, teamwork, and innovative thinking`
-            ];
-
-            const problemType = problemTypes[variation - 1];
-            const solutionType = solutions[variation - 1];
-
-            let story = `${elements[0]} and their group of friends discovered that ${problemType}. The issue was more complicated than anyone had first realized, and it would affect everyone in their community.\n\n`;
-
-            if (focus === 'learning') {
-                story += `"We need to understand exactly what's happening before we can fix it," said ${elements[0]}. They decided to research the problem by talking to experts, reading books, and conducting careful observations.\n\n`;
-                story += `Through their investigation, they learned that ${elements[2] || 'the situation'} was connected to something they hadn't considered before. The real challenge wasn't just solving the immediate problem, but understanding the underlying causes.\n\n`;
-                story += `${solutionType}, they developed a comprehensive plan that not only addressed the current issue but also prevented similar problems in the future.\n\n`;
-            } else if (focus === 'friendship') {
-                story += `The problem was causing tension between different groups in the community. Some people blamed others, and friendships were being strained.\n\n`;
-                story += `"This isn't about who's right or wrong," realized ${elements[0]}. "This is about bringing everyone together to find a solution that works for everyone."\n\n`;
-                story += `They organized community meetings where everyone could share their concerns and ideas. By listening carefully and showing empathy for different perspectives, they helped people understand each other better.\n\n`;
-                story += `${solutionType}, they not only solved the original problem but also strengthened the bonds between community members.\n\n`;
+            // Character/Franchise Recognition
+            if (lowerHints.includes('marvel') || lowerHints.includes('superhero')) {
+                context.franchise = 'marvel';
+                context.characters = ['Spider-Man', 'Iron Man', 'Captain America', 'Black Widow'];
+                context.setting = 'New York City';
+            } else if (lowerHints.includes('sprunki')) {
+                context.franchise = 'sprunki';
+                context.characters = ['Oren', 'Simon', 'Raddy', 'Clukr'];
+                context.setting = 'the musical Sprunki realm';
+            } else if (lowerHints.includes('bluey')) {
+                context.franchise = 'bluey';
+                context.characters = ['Bluey', 'Bingo', 'Mum (Chilli)', 'Dad (Bandit)'];
+                context.setting = 'their Brisbane home';
+            } else if (lowerHints.includes('paw patrol')) {
+                context.franchise = 'paw patrol';
+                context.characters = ['Chase', 'Marshall', 'Skye', 'Rocky'];
+                context.setting = 'Adventure Bay';
+            } else {
+                // Generic characters based on first element
+                context.characters = [elements[0] || 'Alex', 'Sam', 'Jordan'];
+                context.setting = 'their neighborhood';
             }
 
-            story += `The experience taught everyone valuable lessons about cooperation, perseverance, and the importance of working together to overcome challenges. What started as a problem became an opportunity for growth and stronger relationships.`;
+            // Problem/Conflict Detection
+            const problemWords = ['crisis', 'problem', 'lost', 'missing', 'broken', 'conflict', 'challenge', 'trouble'];
+            const themeWords = ['friendship', 'teamwork', 'cooperation', 'learning', 'responsibility', 'kindness'];
 
-            return story;
-        }
+            context.problem = elements.find(el => problemWords.some(word => el.includes(word))) || 'a mysterious challenge';
+            context.theme = elements.find(el => themeWords.some(word => el.includes(word))) || 'friendship and cooperation';
 
-        function generateOlderStory(elements, focus, variation) {
-            const complexityLevels = [
-                `a multifaceted challenge that required balancing competing interests`,
-                `an ethical dilemma where there was no clearly right or wrong answer`,
-                `a systemic issue that had been building up over time`
-            ];
-
-            const complexity = complexityLevels[variation - 1];
-
-            let story = `What began as a straightforward situation involving ${elements[0]} quickly evolved into ${complexity}. The implications extended far beyond what anyone had initially anticipated.\n\n`;
-
-            story += `The core issue centered around ${elements[1] || 'a crucial decision'} that would have lasting consequences for everyone involved. ${elements[0]} found themselves in a position of leadership, responsible not just for their own choices but for guiding others through a complex situation.\n\n`;
-
-            if (focus === 'responsibility') {
-                story += `"With great power comes great responsibility," ${elements[0]} reflected. They realized that their actions would set a precedent for how similar situations might be handled in the future.\n\n`;
-                story += `The decision-making process involved extensive consultation with stakeholders, careful consideration of potential outcomes, and a commitment to transparency throughout the process.\n\n`;
-            } else if (focus === 'emotional') {
-                story += `The emotional toll of the situation was significant. People were feeling frustrated, anxious, and uncertain about the future. ${elements[0]} recognized that addressing these emotional needs was just as important as solving the practical problems.\n\n`;
-                story += `Through empathetic listening, honest communication, and a genuine commitment to understanding everyone's concerns, they helped create an environment where people felt heard and valued.\n\n`;
-            }
-
-            story += `The resolution didn't come easily or quickly. It required sustained effort, compromise, and a willingness to adapt as new information emerged. However, the process itself became a valuable learning experience for everyone involved.\n\n`;
-
-            story += `In the end, they discovered that the most important outcomes weren't just the practical solutions they implemented, but the stronger relationships, improved communication systems, and greater sense of community resilience they had built together.\n\n`;
-
-            story += `The experience demonstrated that complex challenges often have hidden opportunities for growth, innovation, and positive change when approached with patience, wisdom, and collaborative spirit.`;
-
-            return story;
-        }
-    </script>
-</body>
-</html>
+            return context;
+  
